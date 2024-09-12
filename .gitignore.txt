@@ -9,3 +9,4 @@
 logs
 docker
 environment-files
+back-end/.idea
