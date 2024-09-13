@@ -1,0 +1,24 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:14.12-alpine
+    volumes:
+      - ./docker/postgres/pgdata:/var/lib/postgresql/data
+    env_file:
+      - ./environment-files/key-cloak/.env
+    networks:
+      - local
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:25.0.0
+    command: start-dev
+    links:
+      - postgres
+    ports:
+      - "9000:8080"
+    env_file:
+      - ./environment-files/key-cloak/.env
+    networks:
+      - local
+networks:
+  local:
