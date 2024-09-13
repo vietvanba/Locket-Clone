@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: profile
+keycloak:
+  clientId: ${KEY-CLOAK-CLIENT-ID}
+  clientSecret: ${KEY-CLOAK-SECRET}
+  grantType: client_credentials
+  realm: ${KEY-CLOAK-REALM}
+  serverUrl: ${KEY-CLOAK-SERVER-URL}
