@@ -1,9 +1,9 @@
 package com.locket.profile.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.locket.profile.model.ProfileResponse;
-import com.locket.profile.model.UserRequest;
-import com.locket.profile.model.UserResponse;
+import com.locket.profile.payload.ProfileResponse;
+import com.locket.profile.payload.UserRequest;
+import com.locket.profile.payload.UserResponse;
 import com.locket.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

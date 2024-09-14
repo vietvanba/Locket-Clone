@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locket.profile.exception.RegistrationException;
-import com.locket.profile.model.ProfileResponse;
-import com.locket.profile.model.UserRequest;
-import com.locket.profile.model.UserResponse;
+import com.locket.profile.payload.ProfileResponse;
+import com.locket.profile.payload.UserRequest;
+import com.locket.profile.payload.UserResponse;
 import com.locket.profile.service.ProfileService;
 import jakarta.annotation.PostConstruct;
 import jakarta.ws.rs.core.Response;
@@ -29,7 +29,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
     private final Keycloak keycloak;
-    private final ModelMapper mapper;
     private final ModelMapper modelMapper;
     private UsersResource usersResource;
     @Value("${keycloak.realm}")

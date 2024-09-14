@@ -1,4 +1,4 @@
-package com.locket.profile.model;
+package com.locket.profile.payload;
 
 import lombok.Data;
 
