@@ -1,9 +1,21 @@
+server:
+  port: 8000
 spring:
   application:
     name: profile
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+    properties:
+      schema.registry.url: http://localhost:8081
 keycloak:
   clientId: ${KEY-CLOAK-CLIENT-ID}
   clientSecret: ${KEY-CLOAK-SECRET}
   grantType: client_credentials
   realm: ${KEY-CLOAK-REALM}
   serverUrl: ${KEY-CLOAK-SERVER-URL}
+kafka:
+  schema-folder-path: "/kafka/topic_schema/"
+  

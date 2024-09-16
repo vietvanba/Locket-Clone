@@ -4,11 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.locket.profile.config.KeycloakConfig;
+import com.locket.profile.constant.KafkaTopic;
 import com.locket.profile.exception.RegistrationException;
-import com.locket.profile.payload.LoginRequest;
-import com.locket.profile.payload.LoginResponse;
-import com.locket.profile.payload.UserRequest;
-import com.locket.profile.payload.UserResponse;
+import com.locket.profile.payload.*;
+import com.locket.profile.producer.KafkaProducer;
 import com.locket.profile.service.AuthService;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +28,7 @@ import java.util.List;
 public class AuthServiceImpl implements AuthService {
     private final KeycloakConfig keycloakConfig;
     private final UsersResource usersResource;
+    private final KafkaProducer producer;
 
     @Override
     public LoginResponse signIn(LoginRequest request) {
@@ -56,12 +56,23 @@ public class AuthServiceImpl implements AuthService {
             case 201 -> {
                 log.info("New user created");
                 String userId = response.getLocation().getPath().replaceAll(".*/([^/]+)$", "$1");
-                usersResource.get(userId).sendVerifyEmail();
+                producer.send(KafkaTopic.EMAIL_SENDER_TOPIC,
+                        EmailKey.builder()
+                                .email(userRepresentation.getEmail())
+                                .userId(userId)
+                                .build(),
+                        EmailValue.builder()
+                                .email(userRepresentation.getEmail())
+                                .userId(userId)
+                                .token("Token A")
+                                .type("registry")
+                                .build());
                 yield new UserResponse(userId, request.getUsername(), request.getEmail());
             }
             default -> {
                 String errorMessage = getErrorMessage(response.readEntity(String.class));
                 log.info(errorMessage);
+                log.info(request.toString());
                 throw new RegistrationException(errorMessage, HttpStatus.valueOf(response.getStatus()));
             }
         };

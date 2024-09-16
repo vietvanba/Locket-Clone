@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "name": "EMAIL_SENDER_TOPIC_KEY",
+  "namespace": "com.locket.email",
+  "fields": [
+    {
+      "name": "uuid",
+      "type": "string"
+    },
+    {
+      "name": "email",
+      "type": "string"
+    },
+    {
+      "name": "userId",
+      "type": "string"
+    }
+  ]
+}

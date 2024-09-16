@@ -1,0 +1,23 @@
+{
+  "type": "record",
+  "name": "EMAIL_SENDER_TOPIC_VALUE",
+  "namespace": "com.locket.email",
+  "fields": [
+    {
+      "name": "userId",
+      "type": "string"
+    },
+    {
+      "name": "email",
+      "type": "string"
+    },
+    {
+      "name": "token",
+      "type": "string"
+    },
+    {
+      "name": "type",
+      "type": "string"
+    }
+  ]
+}
