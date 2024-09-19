@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class EmailValue {
     private String userId;
+    private String name;
     private String email;
     private String token;
     private String type;
