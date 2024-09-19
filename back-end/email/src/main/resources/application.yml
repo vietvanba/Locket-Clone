@@ -1,0 +1,31 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: email
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVICE_URL}
+    consumer:
+      group-id: email-consumer-group
+      auto-offset-reset: earliest
+      key-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        schema.registry.url: ${SCHEMA_REGISTRY_URL}
+  mail:
+    host: smtp.office365.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+kafka:
+  schema-folder-path: "/kafka/topic_schema/"
+  topic: "EMAIL_SENDER_TOPIC"
+service:
+  profile:
+    url: ${PROFILE_SERVICE_URL}
