@@ -102,21 +102,17 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             ResponseEntity<?> response = client.introspectToken(body);
-            if (response.getBody() instanceof TokenDetails tokenDetails) {
-                if (tokenDetails.getSub().equals(userId)) {
-                    UserResource userResource = usersResource.get(userId);
-                    UserRepresentation userRepresentation = userResource.toRepresentation();
-                    userRepresentation.setEmailVerified(true);
-                    userResource.update(userRepresentation);
-                    userResource.logout();
-                    return new EmailVerificationResponse(HttpStatus.OK, "Email verified");
-
-                } else {
-                    throw new IllegalStateException("User ID mismatch or email already verified");
-                }
-            } else {
+            if (!(response.getBody() instanceof TokenDetails tokenDetails))
                 return new EmailVerificationResponse(HttpStatus.BAD_REQUEST, "Invalid token or response");
-            }
+            if (!tokenDetails.getSub().equals(userId))
+                throw new IllegalStateException("User ID mismatch or email already verified");
+            UserResource userResource = usersResource.get(userId);
+            UserRepresentation userRepresentation = userResource.toRepresentation();
+            userRepresentation.setEmailVerified(true);
+            userResource.update(userRepresentation);
+            userResource.logout();
+            return new EmailVerificationResponse(HttpStatus.OK, "Email verified");
+
         } catch (IllegalStateException e) {
             return new EmailVerificationResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (Exception e) {
