@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.locket.profile.constant.EmailType.VERIFY_EMAIL;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -47,13 +49,16 @@ public class AuthServiceImpl implements AuthService {
         Keycloak keycloak = keycloakConfig.getInstanceUser(request.getUsername(), request.getPassword());
         try {
             AccessTokenResponse token = keycloak.tokenManager().getAccessToken();
+            List<UserRepresentation> userRepresentation = usersResource.searchByUsername(request.getUsername(), true);
             return new LoginResponse(
                     token.getToken(),
                     token.getExpiresIn(),
                     token.getRefreshToken(),
                     token.getRefreshExpiresIn(),
                     token.getTokenType(),
-                    token.getScope()
+                    token.getScope(),
+                    userRepresentation.get(0).getId(),
+                    userRepresentation.get(0).getUsername()
             );
         } catch (Exception e) {
             throw new RegistrationException("Username or password is incorrect", HttpStatus.UNAUTHORIZED);
@@ -80,7 +85,7 @@ public class AuthServiceImpl implements AuthService {
                                 .userId(userId)
                                 .name(userRepresentation.getFirstName() + " " + userRepresentation.getLastName())
                                 .token(token)
-                                .type("verify-email")
+                                .type(VERIFY_EMAIL)
                                 .build());
                 yield new UserResponse(userId, request.getUsername(), request.getEmail());
             }
@@ -102,21 +107,17 @@ public class AuthServiceImpl implements AuthService {
 
         try {
             ResponseEntity<?> response = client.introspectToken(body);
-            if (response.getBody() instanceof TokenDetails tokenDetails) {
-                if (tokenDetails.getSub().equals(userId)) {
-                    UserResource userResource = usersResource.get(userId);
-                    UserRepresentation userRepresentation = userResource.toRepresentation();
-                    userRepresentation.setEmailVerified(true);
-                    userResource.update(userRepresentation);
-                    userResource.logout();
-                    return new EmailVerificationResponse(HttpStatus.OK, "Email verified");
-
-                } else {
-                    throw new IllegalStateException("User ID mismatch or email already verified");
-                }
-            } else {
+            if (!(response.getBody() instanceof TokenDetails tokenDetails))
                 return new EmailVerificationResponse(HttpStatus.BAD_REQUEST, "Invalid token or response");
-            }
+            if (!tokenDetails.getSub().equals(userId))
+                throw new IllegalStateException("User ID mismatch or email already verified");
+            UserResource userResource = usersResource.get(userId);
+            UserRepresentation userRepresentation = userResource.toRepresentation();
+            userRepresentation.setEmailVerified(true);
+            userResource.update(userRepresentation);
+            userResource.logout();
+            return new EmailVerificationResponse(HttpStatus.OK, "Email verified");
+
         } catch (IllegalStateException e) {
             return new EmailVerificationResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (Exception e) {
