@@ -18,6 +18,9 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.locket.email.constant.EmailType.FORGOT_PASSWORD;
+import static com.locket.email.constant.EmailType.VERIFY_EMAIL;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -33,15 +36,18 @@ public class EmailConsumerService {
         GenericRecord key = record.key();
         GenericRecord value = record.value();
         switch (value.get("type").toString()) {
-            case "verify-email": {
+            case VERIFY_EMAIL: {
                 Map<String, Object> data = new HashMap<>();
                 data.put("name", value.get("name").toString());
                 data.put("confirmationLink", String.format("%s/confirm?userId=%s&token=%s", profileServiceUrl, key.get("userId"), value.get("token")));
                 sendEmail(key.get("email").toString(), "Verify email", "registry", data);
                 break;
             }
-            case "notification": {
-                System.out.println("notification");
+            case FORGOT_PASSWORD:{
+                Map<String, Object> data = new HashMap<>();
+                data.put("name", value.get("name").toString());
+                data.put("confirmationLink", String.format("%s/forgot-password?userId=%s&token=%s", profileServiceUrl, key.get("userId"), value.get("token")));
+                sendEmail(key.get("email").toString(), "Forgot password", "forgot-password", data);
                 break;
             }
             default: {
