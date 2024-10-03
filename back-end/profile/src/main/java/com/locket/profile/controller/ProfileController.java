@@ -1,12 +1,12 @@
 package com.locket.profile.controller;
 
+import com.locket.profile.payload.ChangePasswordRequest;
 import com.locket.profile.payload.ProfileResponse;
 import com.locket.profile.service.ProfileService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,5 +19,15 @@ public class ProfileController {
     @GetMapping
     public ResponseEntity<List<ProfileResponse>> getAllProfile() {
         return ResponseEntity.ok(service.getAllUser());
+    }
+
+    @PostMapping("/forgot-password/{email}")
+    public ResponseEntity<?> forgotPassword(@PathVariable(name = "email") String email) {
+        return ResponseEntity.ok(service.forgotPassword(email));
+    }
+
+    @PostMapping("/change-password/{userId}")
+    public ResponseEntity<?> changePassword(@PathVariable(name = "userId") String userId, @Valid @RequestBody ChangePasswordRequest request) {
+        return ResponseEntity.ok(service.changePassword(userId, request));
     }
 }

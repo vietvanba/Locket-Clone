@@ -8,10 +8,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginResponse {
-    public String access_token;
-    public Long expires_in;
-    public String refresh_token;
-    public Long refresh_expires_in;
-    public String token_type;
-    public String scope;
+    private String access_token;
+    private Long expires_in;
+    private String refresh_token;
+    private Long refresh_expires_in;
+    private String token_type;
+    private String scope;
+    private String userId;
+    private String username;
 }
