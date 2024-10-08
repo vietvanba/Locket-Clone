@@ -1,0 +1,15 @@
+server:
+  port: 8001
+spring:
+  application:
+    name: media
+#  kafka:
+#    bootstrap-servers: ${KAFKA-SERVER-URL}
+#    producer:
+#      key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+#      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+#    properties:
+#      schema.registry.url: ${KAFKA-REGISTRY.URL}
+#kafka:
+#  schema-folder-path: "/kafka/topic_schema/"
+  
