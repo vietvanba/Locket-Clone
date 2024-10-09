@@ -12,17 +12,37 @@ spring:
     gateway:
       routes:
         - id: profile
-          uri: http://localhost:8000
+          uri: ${PROFILE-SERVICE-URL}
           predicates:
             - Path=/api/profile/**
           filters:
             - RemoveRequestHeader=Cookie
         - id: auth
-          uri: http://localhost:8000
+          uri: ${PROFILE-SERVICE-URL}
           predicates:
             - Path=/api/auth/**
           filters:
             - RemoveRequestHeader=Cookie
+        - id: media
+          uri: ${MEDIA-SERVICE-URL}
+          predicates:
+            - Path=/api/media/**
+          filters:
+            - RemoveRequestHeader=Cookie
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls[0].name: Profile Service
+    urls[0].url: /aggregate/profile-service/v3/api-docs
+    urls[1].name: Media Service
+    urls[1].url: /aggregate/media-service/v3/api-docs
+  api-docs:
+    path: /api-docs
+servers:
+  profile:
+    url: ${PROFILE-SERVICE-URL}
+  media:
+    url: ${MEDIA-SERVICE-URL}
 logging:
   level:
     org.springframework.security: DEBUG

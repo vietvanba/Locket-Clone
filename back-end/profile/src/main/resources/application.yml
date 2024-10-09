@@ -23,4 +23,8 @@ keycloak:
   serverUrl: ${KEY-CLOAK-SERVER-URL}
 kafka:
   schema-folder-path: "/kafka/topic_schema/"
-  
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /api-docs
