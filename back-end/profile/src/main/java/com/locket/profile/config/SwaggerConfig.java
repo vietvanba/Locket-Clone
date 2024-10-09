@@ -18,7 +18,6 @@ public class SwaggerConfig {
         ExternalDocumentation externalDocs = new ExternalDocumentation()
                 .description("You can refer to the Profile wiki documentation")
                 .url("https://github.com/locket/profile/");
-                ;
         return new OpenAPI()
                 .info(info)
                 .externalDocs(externalDocs);
