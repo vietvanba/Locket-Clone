@@ -18,7 +18,6 @@ public class SwaggerConfig {
         ExternalDocumentation externalDocs = new ExternalDocumentation()
                 .description("You can refer to the Media wiki documentation")
                 .url("https://github.com/locket/media/");
-        ;
         return new OpenAPI()
                 .info(info)
                 .externalDocs(externalDocs);
