@@ -25,11 +25,13 @@ public class SecurityConfig {
     @Autowired
     DelegatedAccessDeniedHandler accessDeniedHandler;
 
+    private final String[] whiteList = {"/api/auth/**", "swagger-ui.html", "swagger-ui/**", "/v3/api-docs/**", "/api-docs/**", "/swagger-resources/**", "/aggregate/**","webjars/**"};
+
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         CustomJwtAuthenticationConverter customConverter = new CustomJwtAuthenticationConverter(new ReactiveKeycloakRoleConverter());
         return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange(exchange -> exchange.pathMatchers("/api/auth/**")
+                .authorizeExchange(exchange -> exchange.pathMatchers(whiteList)
                         .permitAll()
                         .pathMatchers("/api/profile")
                         .hasRole("ADMIN")
